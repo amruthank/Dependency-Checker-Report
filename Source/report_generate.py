@@ -39,7 +39,7 @@ def generateFinalReport(res_dict):
             sheet["%s"%(row+str(col))] = key
             sheet["%s"%(chr(ord(row)+1)+str(col))] = "%s"%(", ".join(v for v in val))
 
-            if any( v in ["GPL", "LGPL", "GNU General Public License"] for v in val):
+            if any(("%s"%v).find("General") != -1 for v in val):
                 sheet["%s"%(row+str(col))].fill = redFill
                 sheet["%s"%(chr(ord(row)+1)+str(col))].fill = redFill
                 sheet["%s"%(chr(ord(row)+2)+str(col))].fill = redFill

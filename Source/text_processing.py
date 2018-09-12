@@ -86,7 +86,6 @@ list_of_oss_license = {
                         }
 
 
-
 def _cleanText(text):
 
     text = re.sub('\n+', ' ', text)
@@ -148,6 +147,7 @@ def _get_all_phrases_containing_tar_wrd(target_word, url, left_margin = 10, righ
 def getLicenseNames(url_list):
     
     license_names = []
+    is_public_license = False
     
     for url in url_list:
 
@@ -156,18 +156,30 @@ def getLicenseNames(url_list):
         for result in results:
             
             for key, val in list_of_oss_license.items():
-                
-                l = [v for v in val if result.find(v) != -1]
-                
+                l = [v for v in val if (result.find(v) != -1 and (len(license_names)>0 and val not in license_names))]
                 results = None
                 
                 if len(l) > 0: 
                     results = l[0]
                 elif result.find(key) != -1:
                     results = key+" "+"License"
-                
-                if results and results not in license_names:
+
+                if results != None and results not in license_names:
+
+                    if results == "Public License":
+                        is_public_license = True
                     license_names.append(results)
+
+    if is_public_license and any(("%s"%val).find("General") != -1 for val in license_names):
+        
+        try:
+            index = license_names.index("Public License")
+        except ValueError:
+            pass
+        else:
+            del license_names[index]
 
     return license_names
 
+
+#TODO: Extract license which are not given in the above dictionary.

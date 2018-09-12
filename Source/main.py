@@ -32,9 +32,12 @@ class File:
     def file_parser(self):
 
         if self.file_type == "json":
-            with open(self.file) as f: #Open and load a file.
-                data = json.load(f)
-                
+            try:
+                with open(self.file) as f: #Open and load a file.
+                    data = json.load(f)
+            except json.JSONDecodeError:
+                    raise Exception("Error in the json file.")
+                    
             for line in data: #Create result dictionary.
                 if line.startswith("depen"):
                     for key, val in data[line].items():
@@ -55,9 +58,9 @@ class File:
         for key, val in (self.dependency_dic).items():
             component_urls_dict["%s"%key]= web_init(key)
             self.extract_component_licenses(key, component_urls_dict["%s"%key])
-
         
         self.generate_report(result_dictionary)
+
 
     #Finalize the license names for the component.
     def extract_component_licenses(self, oss_name, url_list):
