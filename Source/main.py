@@ -2,9 +2,9 @@ import sys, json
 from extract_license_urls import web_init
 from text_processing import getLicenseNames
 from report_generate import generateFinalReport
-import logging
+#import logging
 
-logging.basicConfig(level = logging.DEBUG)
+#logging.basicConfig(level = logging.DEBUG)
 
 component_urls_dict = {}
 result_dictionary = {}
