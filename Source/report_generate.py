@@ -1,6 +1,8 @@
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles import PatternFill
+from matplotlib import style, pyplot as plt
+
 
 thin_border = Border(left=Side(style='thin'), 
                      right=Side(style='thin'), 
@@ -13,41 +15,86 @@ redFill = PatternFill(start_color='EE1111',
                     end_color='EE1111',
                     fill_type='solid')
 
+def _reverse_dict_values(data):
+    new_res = {}
+    
+    for key, val in data.items():
+
+        for index in val:
+            if index not in new_res:
+                new_res.setdefault(index, [key])
+                
+            else:
+                new_res[index].append(key)
+
+    slices = [int(0)]*len(new_res)
+    labels = ["None"]*len(new_res)
+    explode = [int(0)]*len(new_res)
+    
+    for i, items in enumerate(new_res.items()):
+
+        if "GPL" in items[0]:
+            explode[i] = 0.15
+        slices[i] = len(items[1])
+        labels[i] = items[0]
+
+    #print(slices)    
+    #print(json.dumps(new_res, indent = 4))
+    return (labels, slices, explode, new_res)
+
+
+
+
+def _draw_chart(labels, slices, explode, new_res):
+    patches, texts = plt.pie(slices, labels = ["\n".join(str(key) for key in val) for val in new_res.values()], explode = explode, startangle = 90, \
+                             shadow = True, autopct = None, labeldistance = 0.5)
+    plt.title("Dependency Component Licenses")
+    plt.legend(patches, labels, loc="best")
+    plt.tight_layout()
+    plt.show()
+
 
 '''
     Store final result in the excel format.
 
 '''
-def generateFinalReport(res_dict):
+def generateFinalReport(res_dict, result_type):
 
-    try:	
-        wb = openpyxl.load_workbook('result.xlsx')
-    except Exception:
-        raise Exception("Please install openpyxl package!!\nCommand to install the package - (pip install openpyxl)")
+    if result_type == "graph":
+        
+        labels, slices, explode, new_res = _reverse_dict_values(res_dict)
+        _draw_chart(labels, slices, explode, new_res)
+    
     else:
-        sheet = wb["Sheet1"]
 
-        row = "C"
-        col = 5
-        
-        for key, val in res_dict.items():
-            sheet["%s"%(row+str(col))].border = thin_border
-            sheet["%s"%(chr(ord(row)+1)+str(col))].border = thin_border
-            sheet["%s"%(chr(ord(row)+2)+str(col))].border = thin_border
-            sheet["%s"%(chr(ord(row)+3)+str(col))].border = thin_border
+        try:	
+            wb = openpyxl.load_workbook('result.xlsx')
+        except Exception:
+            raise Exception("Please install openpyxl package!!\nCommand to install the package - (pip install openpyxl)")
+        else:
+            sheet = wb["Sheet1"]
+
+            row = "C"
+            col = 5
             
-            sheet["%s"%(row+str(col))] = key
-            sheet["%s"%(chr(ord(row)+1)+str(col))] = "%s"%(", ".join(v for v in val))
-
-            if any(("%s"%v).find("General") != -1 for v in val):
-                sheet["%s"%(row+str(col))].fill = redFill
-                sheet["%s"%(chr(ord(row)+1)+str(col))].fill = redFill
-                sheet["%s"%(chr(ord(row)+2)+str(col))].fill = redFill
-                sheet["%s"%(chr(ord(row)+3)+str(col))].fill = redFill
+            for key, val in res_dict.items():
+                sheet["%s"%(row+str(col))].border = thin_border
+                sheet["%s"%(chr(ord(row)+1)+str(col))].border = thin_border
+                sheet["%s"%(chr(ord(row)+2)+str(col))].border = thin_border
+                sheet["%s"%(chr(ord(row)+3)+str(col))].border = thin_border
                 
-            col = col+1
+                sheet["%s"%(row+str(col))] = key
+                sheet["%s"%(chr(ord(row)+1)+str(col))] = "%s"%(", ".join(v for v in val))
+
+                if any(("%s"%v).find("General") != -1 for v in val):
+                    sheet["%s"%(row+str(col))].fill = redFill
+                    sheet["%s"%(chr(ord(row)+1)+str(col))].fill = redFill
+                    sheet["%s"%(chr(ord(row)+2)+str(col))].fill = redFill
+                    sheet["%s"%(chr(ord(row)+3)+str(col))].fill = redFill
+                    
+                col = col+1
+                
             
-        
-        wb.save('result.xlsx')
+            wb.save('result.xlsx')
         return True
     

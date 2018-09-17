@@ -129,7 +129,7 @@ def _get_all_phrases_containing_tar_wrd(target_word, url, left_margin = 10, righ
      
     ## Create the text of tokens
     text = Text(tokens)
- 
+    
     ## Collect all the index or offset position of the target word
     c = ConcordanceIndex(text.tokens, key = lambda s: s.lower())
 
@@ -138,6 +138,12 @@ def _get_all_phrases_containing_tar_wrd(target_word, url, left_margin = 10, righ
     ## The map function is use so that when the offset position - the target range < 0, it will be default to zero
     concordance_txt = ([text.tokens[list(map(lambda x: x-5 if (x-left_margin)>0 else 0,[offset]))[0]:offset+1] for offset in c.offsets(target_word)])
 
+    if len(concordance_txt) == 0:
+        missed_license_names = []
+        for t in tokens:
+            if re.search('( |-|_|\/)license', t.lower()) != None:
+                missed_license_names.append(t)
+        return missed_license_names
     
     ## join the sentences for each of the target phrase and return it
     return [''.join([x+' ' for x in con_sub]) for con_sub in concordance_txt]
@@ -152,25 +158,23 @@ def getLicenseNames(url_list):
     for url in url_list:
 
         results = _get_all_phrases_containing_tar_wrd('license', url)
-            
+        
         for result in results:
             
             for key, val in list_of_oss_license.items():
-                l = [v for v in val if (result.find(v) != -1 and (len(license_names)>0 and val not in license_names))]
+                
+                l = [v for v in val if (result.lower().find(v.lower()) != -1 and (len(license_names)>0 and val not in license_names))]
                 results = None
                 
-                if len(l) > 0: 
-                    results = l[0]
-                elif result.find(key) != -1:
+                if len(l) > 0 or result.find(key) != -1:
                     results = key+" "+"License"
 
                 if results != None and results not in license_names:
-
                     if results == "Public License":
                         is_public_license = True
                     license_names.append(results)
 
-    if is_public_license and any(("%s"%val).find("General") != -1 for val in license_names):
+    if is_public_license and any(re.search("GPL|LGPL", val, re.IGNORECASE) != None for val in license_names):
         
         try:
             index = license_names.index("Public License")
@@ -179,7 +183,24 @@ def getLicenseNames(url_list):
         else:
             del license_names[index]
 
+        if "GPL License" in license_names and "LGPL License" in license_names:
+            try:
+                index = license_names.index("LGPL License")
+            except ValueError:
+                pass
+            else:
+                del license_names[index]
+    
     return license_names
 
 
 #TODO: Extract license which are not given in the above dictionary.
+
+
+if __name__ == "__main__":
+
+    url_list = ['https://github.com/Marak/asciimo/blob/master/MIT-LICENSE.txt', \
+        'https://github.com/Marak/asciimo/blob/master/GPL-LICENSE.txt', \
+        'https://github.com/Marak/asciimo']
+    
+    print(getLicenseNames(url_list))

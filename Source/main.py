@@ -2,6 +2,7 @@ import sys, json
 from extract_license_urls import web_init
 from text_processing import getLicenseNames
 from report_generate import generateFinalReport
+import time
 #import logging
 
 #logging.basicConfig(level = logging.DEBUG)
@@ -52,15 +53,14 @@ class File:
         return self.fetch_license_url_from_internet()
     
 
-    #Query "license of component" to fetch url's.
-    def fetch_license_url_from_internet(self):
+    #Query "license of component" to extract first three url's!
+    def fetch_license_url_from_internet(self): #TODO: Speedup the process.
 
         for key, val in (self.dependency_dic).items():
-            component_urls_dict["%s"%key]= web_init(key)
+            component_urls_dict["%s"%key]= web_init(key)["%s"%key]
             self.extract_component_licenses(key, component_urls_dict["%s"%key])
-        
-        self.generate_report(result_dictionary)
 
+        self.generate_report(result_dictionary)
 
     #Finalize the license names for the component.
     def extract_component_licenses(self, oss_name, url_list):
@@ -68,10 +68,10 @@ class File:
         result_dictionary["%s"%oss_name] = []
         result_dictionary["%s"%oss_name] = getLicenseNames(url_list)
 
-
     #Final report generation.
     def generate_report(self, res):
-        generateFinalReport(res)
+        print(json.dumps(res, indent = 4))
+        generateFinalReport(res, result_type = "graph")
         
 def file_parser():
     file1 = File(input())
