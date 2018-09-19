@@ -190,7 +190,9 @@ def getLicenseNames(url_list):
                 pass
             else:
                 del license_names[index]
-    
+
+    if len(license_names) == 0:
+        return ["Unlicensed"]
     return license_names
 
 

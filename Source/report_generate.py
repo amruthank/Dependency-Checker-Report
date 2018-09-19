@@ -48,7 +48,7 @@ def _reverse_dict_values(data):
 def _draw_chart(labels, slices, explode, new_res):
     patches, texts = plt.pie(slices, labels = ["\n".join(str(key) for key in val) for val in new_res.values()], explode = explode, startangle = 90, \
                              shadow = True, autopct = None, labeldistance = 0.5)
-    plt.title("Dependency Component Licenses")
+    plt.title("Licenses of Dependency Components")
     plt.legend(patches, labels, loc="best")
     plt.tight_layout()
     plt.show()
