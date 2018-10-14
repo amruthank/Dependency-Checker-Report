@@ -4,9 +4,6 @@ from text_processing import getLicenseNames
 from report_generate import generateFinalReport
 import time
 import multiprocessing
-#import logging
-
-#logging.basicConfig(level = logging.DEBUG)
 
 component_urls_dict = {}
 result_dictionary = {}
@@ -147,31 +144,27 @@ class open_source_License_ui:
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
-        _bgcolor = '#e29e98'  # X11 color: 'gray85'
-        _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = '#e29e98' # X11 color: 'gray85'
-        _ana1color = '#e29e98' # X11 color: 'gray85' 
-        _ana2color = '#e29e98' # X11 color: 'gray85'
 
         self.top = top
+        self.upload_file_path = ""
 
         top.geometry("300x250+500+200")
-        top.title("Third Party License Text Generator!")
-        top.configure(background="#e29e98")
-        top.configure(highlightbackground="#e29e98")
+        top.title("Dependenct Checker Tool")
+        top.configure(background="#0c9ee2") #0c9ee2
+        top.configure(highlightbackground="#0c9ee2")
         top.configure(highlightcolor="black")
 
         self.var = StringVar()
     
         self.browse = Button(top)
-        self.browse.place(relx=0.80, rely=0.07, height=30, width=55)
-        self.browse.configure(activebackground="#e29e98")
+        self.browse.place(relx=0.80, rely=0.09, height=26, width=55)
+        self.browse.configure(activebackground="#0a83bb")
         self.browse.configure(activeforeground="#000000")
-        self.browse.configure(background="#e29e98")
+        self.browse.configure(background="#0a83bb")
         self.browse.configure(command=self.Browse_file)
         self.browse.configure(disabledforeground="#a3a3a3")
         self.browse.configure(foreground="#000000")
-        self.browse.configure(highlightbackground="#e29e98")
+        self.browse.configure(highlightbackground="#0a83bb")
         self.browse.configure(highlightcolor="black")
         self.browse.configure(pady="0")
         self.browse.configure(text='''Browse''')
@@ -183,7 +176,7 @@ class open_source_License_ui:
         self.entry_field.configure(disabledforeground="#a3a3a3")
         self.entry_field.configure(font="TkFixedFont")
         self.entry_field.configure(foreground="#000000")
-        self.entry_field.configure(highlightbackground="#e29e98")
+        self.entry_field.configure(highlightbackground="#0c9ee2")
         self.entry_field.configure(highlightcolor="black")
         self.entry_field.configure(insertbackground="black")
         self.entry_field.configure(selectbackground="#c4c4c4")
@@ -195,22 +188,22 @@ class open_source_License_ui:
         self.Label1.configure(activebackground="#f9f9f9")
         self.Label1.configure(activeforeground="black")
         self.Label1.configure(anchor=W)
-        self.Label1.configure(background="#e29e98")
+        self.Label1.configure(background="#0c9ee2")
         self.Label1.configure(disabledforeground="#a3a3a3")
         self.Label1.configure(foreground="#000000")
-        self.Label1.configure(highlightbackground="#e29e98")
+        self.Label1.configure(highlightbackground="#0c9ee2")
         self.Label1.configure(highlightcolor="black")
         self.Label1.configure(text='''Upload *.json file:''')
         
 
         self.Compile_button = Button(top)
-        self.Compile_button.place(relx=0.35, rely=0.65, height=30, width=90)
-        self.Compile_button.configure(activebackground="#e29e98")
+        self.Compile_button.place(relx=0.35, rely=0.65, height=40, width=80)
+        self.Compile_button.configure(activebackground="#0a83bb") #0c9ee2
         self.Compile_button.configure(activeforeground="#000000")
-        self.Compile_button.configure(background="#e29e98")
+        self.Compile_button.configure(background="#0a83bb")
         self.Compile_button.configure(disabledforeground="#a3a3a3")
         self.Compile_button.configure(foreground="#000000")
-        self.Compile_button.configure(highlightbackground="#e29e98")
+        self.Compile_button.configure(highlightbackground="#0a83bb")
         self.Compile_button.configure(highlightcolor="black")
         self.Compile_button.configure(pady="0")
         self.Compile_button.configure(text='''Run''')
@@ -218,19 +211,21 @@ class open_source_License_ui:
 
 
     def Browse_file(self):
-        K = filedialog.askopenfilename(filetypes= Ftype)
-        self.entry_field.delete(0,END)
-        self.entry_field.insert(0,K)
+        self.upload_file_path = filedialog.askopenfilename(filetypes= Ftype)
+        try:
+            self.entry_field.insert("end",(self.upload_file_path).split("/")[-1])
+        except Exception:
+            self.entry_field.insert("end",self.upload_file_path)
         
     
     def Run(self):
 
         if self.entry_field.get() == "":
             messagebox.showwarning("Warining", "Please upload the *.json file!", size = 0.5)
-
         else:
             try:
                 file_parser(self.entry_field.get())
+
             except Exception:
                 raise("Error!! Parsing the file")
     
@@ -240,5 +235,3 @@ if __name__ == '__main__':
 
 
 ##################################################################END OF FRONT END###########################################################################
-
-
