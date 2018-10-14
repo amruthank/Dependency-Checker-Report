@@ -122,7 +122,10 @@ def _get_all_phrases_containing_tar_wrd(target_word, url, left_margin = 10, righ
         Left margin will take note of the beginning of the text
     """
 
-    tar_passage = _getBrowserData(url)
+    try:
+        tar_passage = _getBrowserData(url)
+    except Exception:
+        return "Error"
     
     ## Create list of tokens using nltk function
     tokens = word_tokenize(tar_passage)
@@ -158,6 +161,9 @@ def getLicenseNames(url_list):
     for url in url_list:
 
         results = _get_all_phrases_containing_tar_wrd('license', url)
+
+        if results == "Error":
+            return ["Unlicensed"]
         
         for result in results:
             
@@ -193,6 +199,7 @@ def getLicenseNames(url_list):
 
     if len(license_names) == 0:
         return ["Unlicensed"]
+    print(license_names)
     return license_names
 
 

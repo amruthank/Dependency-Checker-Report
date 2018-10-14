@@ -3,6 +3,7 @@ from extract_license_urls import *
 from text_processing import getLicenseNames
 from report_generate import generateFinalReport
 import time
+import multiprocessing
 #import logging
 
 #logging.basicConfig(level = logging.DEBUG)
@@ -56,28 +57,29 @@ class File:
     #Query "license of component" to extract first three url's!
     def fetch_license_url_from_internet(self): #TODO: Speedup the process.
 
+        #Function to extract license URL's.
         automation = SeleniumDriver()
         start_time1 = time.time()
         for key, val in (self.dependency_dic).items():
             component_urls_dict["%s"%key]= automation.get_urls(key)["%s"%key]
         end_time1 = time.time()
-        print(f'\nTotal execution time with headerless browser: {end_time1-start_time1:.2f}s\n')
+        #print(f'\nTotal execution time with headerless browser: {end_time1-start_time1:.2f}s\n')
+        print("Total execution time with headerless browser: %s"%(end_time1-start_time1))
         automation.close_browser()
 
+        #Function to extract license names from top 3 URL's.
         start_time2 = time.time()
         pool = multiprocessing.Pool()
         pool_res = pool.map(getLicenseNames, list(component_urls_dict.values()))
         end_time2 = time.time()
-        
-        print(f'\nTotal execution time with parallel programming: {end_time2-start_time2:.2f}s\n')
-        #print(pool_res)
+        #print(f'\nTotal execution time with parallel programming: {end_time2-start_time2:.2f}s\n')
+
         for id, key in enumerate(self.dependency_dic):
             result_dictionary["%s"%key] = pool_res[id]
            
         self.generate_report(result_dictionary)
 
     #Finalize the license names for the component.
-    #def extract_component_licenses(self, oss_name, url_list):
     def extract_component_licenses(self, oss_name, license_list):    
         result_dictionary["%s"%oss_name] = []
         result_dictionary["%s"%oss_name] = getLicenseNames(license_list)
