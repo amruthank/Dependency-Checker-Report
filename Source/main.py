@@ -89,8 +89,156 @@ class File:
         print(json.dumps(res, indent = 4))
         generateFinalReport(res, result_type = "graph")
         
-def file_parser():
-    file1 = File(input())
+def file_parser(file_name):
+    file1 = File(file_name)
     
-if __name__ == "__main__":
-    file_parser()
+#if __name__ == "__main__":
+#    file_parser()
+
+
+
+
+
+
+##################################################################FRONT END##################################################################################
+
+'''try:
+    from Tkinter import *
+except ImportError:
+'''
+
+from tkinter import *
+    
+from tkinter import messagebox
+
+
+try:
+    import ttk
+    py3 = 0
+except ImportError:
+    import tkinter.ttk as ttk
+    py3 = 1
+from tkinter import filedialog
+
+
+#import billing_GUI_support
+
+
+Ftype=[('Excel (*.xls*)', '*.xl*'),('Any File (*.*)', '*')]
+#Beginning of Open source License Text Generation GUI function!
+def olt_gui(): 
+    root = Tk()
+    
+    #root.iconbitmap('oslt.ico')
+    top = open_source_License_ui(root)
+                    
+    root.mainloop()
+#End of olt_gui finction.
+
+
+
+'''
+you can change any thing from here, Please Be Adviced, with great power comes great responsibility.
+Only change if you know what you are doing responsibly
+'''
+
+class open_source_License_ui:
+
+    def __init__(self, top=None):
+        '''This class configures and populates the toplevel window.
+           top is the toplevel containing window.'''
+        _bgcolor = '#e29e98'  # X11 color: 'gray85'
+        _fgcolor = '#000000'  # X11 color: 'black'
+        _compcolor = '#e29e98' # X11 color: 'gray85'
+        _ana1color = '#e29e98' # X11 color: 'gray85' 
+        _ana2color = '#e29e98' # X11 color: 'gray85'
+
+        self.top = top
+
+        top.geometry("300x250+500+200")
+        top.title("Third Party License Text Generator!")
+        top.configure(background="#e29e98")
+        top.configure(highlightbackground="#e29e98")
+        top.configure(highlightcolor="black")
+
+        self.var = StringVar()
+    
+        self.browse = Button(top)
+        self.browse.place(relx=0.80, rely=0.07, height=30, width=55)
+        self.browse.configure(activebackground="#e29e98")
+        self.browse.configure(activeforeground="#000000")
+        self.browse.configure(background="#e29e98")
+        self.browse.configure(command=self.Browse_file)
+        self.browse.configure(disabledforeground="#a3a3a3")
+        self.browse.configure(foreground="#000000")
+        self.browse.configure(highlightbackground="#e29e98")
+        self.browse.configure(highlightcolor="black")
+        self.browse.configure(pady="0")
+        self.browse.configure(text='''Browse''')
+
+
+        self.entry_field = Entry(top)
+        self.entry_field.place(relx=0.03, rely=0.07, relheight=0.12, relwidth=0.75)
+        self.entry_field.configure(background="white")
+        self.entry_field.configure(disabledforeground="#a3a3a3")
+        self.entry_field.configure(font="TkFixedFont")
+        self.entry_field.configure(foreground="#000000")
+        self.entry_field.configure(highlightbackground="#e29e98")
+        self.entry_field.configure(highlightcolor="black")
+        self.entry_field.configure(insertbackground="black")
+        self.entry_field.configure(selectbackground="#c4c4c4")
+        self.entry_field.configure(selectforeground="black")
+
+
+        self.Label1 = Label(top)
+        self.Label1.place(relx=0.03, rely=0.02, height=22, width=544)
+        self.Label1.configure(activebackground="#f9f9f9")
+        self.Label1.configure(activeforeground="black")
+        self.Label1.configure(anchor=W)
+        self.Label1.configure(background="#e29e98")
+        self.Label1.configure(disabledforeground="#a3a3a3")
+        self.Label1.configure(foreground="#000000")
+        self.Label1.configure(highlightbackground="#e29e98")
+        self.Label1.configure(highlightcolor="black")
+        self.Label1.configure(text='''Upload *.json file:''')
+        
+
+        self.Compile_button = Button(top)
+        self.Compile_button.place(relx=0.35, rely=0.65, height=30, width=90)
+        self.Compile_button.configure(activebackground="#e29e98")
+        self.Compile_button.configure(activeforeground="#000000")
+        self.Compile_button.configure(background="#e29e98")
+        self.Compile_button.configure(disabledforeground="#a3a3a3")
+        self.Compile_button.configure(foreground="#000000")
+        self.Compile_button.configure(highlightbackground="#e29e98")
+        self.Compile_button.configure(highlightcolor="black")
+        self.Compile_button.configure(pady="0")
+        self.Compile_button.configure(text='''Run''')
+        self.Compile_button.configure(command=self.Run)
+
+
+    def Browse_file(self):
+        K = filedialog.askopenfilename(filetypes= Ftype)
+        self.entry_field.delete(0,END)
+        self.entry_field.insert(0,K)
+        
+    
+    def Run(self):
+
+        if self.entry_field.get() == "":
+            messagebox.showwarning("Warining", "Please upload the *.json file!", size = 0.5)
+
+        else:
+            try:
+                file_parser(self.entry_field.get())
+            except Exception:
+                raise("Error!! Parsing the file")
+    
+
+if __name__ == '__main__':
+    olt_gui()
+
+
+##################################################################END OF FRONT END###########################################################################
+
+
