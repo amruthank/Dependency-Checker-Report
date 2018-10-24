@@ -150,21 +150,21 @@ class open_source_License_ui:
 
         top.geometry("300x250+500+200")
         top.title("Dependenct Checker Tool")
-        top.configure(background="#0c9ee2") #0c9ee2
-        top.configure(highlightbackground="#0c9ee2")
+        top.configure(background="#ff9980") #ff9980
+        top.configure(highlightbackground="#ff9980")
         top.configure(highlightcolor="black")
 
         self.var = StringVar()
     
         self.browse = Button(top)
         self.browse.place(relx=0.80, rely=0.09, height=26, width=55)
-        self.browse.configure(activebackground="#0a83bb")
+        self.browse.configure(activebackground="#ff8566")
         self.browse.configure(activeforeground="#000000")
-        self.browse.configure(background="#0a83bb")
+        self.browse.configure(background="#ff8566")
         self.browse.configure(command=self.Browse_file)
         self.browse.configure(disabledforeground="#a3a3a3")
         self.browse.configure(foreground="#000000")
-        self.browse.configure(highlightbackground="#0a83bb")
+        self.browse.configure(highlightbackground="#ff8566")
         self.browse.configure(highlightcolor="black")
         self.browse.configure(pady="0")
         self.browse.configure(text='''Browse''')
@@ -176,7 +176,7 @@ class open_source_License_ui:
         self.entry_field.configure(disabledforeground="#a3a3a3")
         self.entry_field.configure(font="TkFixedFont")
         self.entry_field.configure(foreground="#000000")
-        self.entry_field.configure(highlightbackground="#0c9ee2")
+        self.entry_field.configure(highlightbackground="#ff9980")
         self.entry_field.configure(highlightcolor="black")
         self.entry_field.configure(insertbackground="black")
         self.entry_field.configure(selectbackground="#c4c4c4")
@@ -188,22 +188,22 @@ class open_source_License_ui:
         self.Label1.configure(activebackground="#f9f9f9")
         self.Label1.configure(activeforeground="black")
         self.Label1.configure(anchor=W)
-        self.Label1.configure(background="#0c9ee2")
+        self.Label1.configure(background="#ff9980")
         self.Label1.configure(disabledforeground="#a3a3a3")
         self.Label1.configure(foreground="#000000")
-        self.Label1.configure(highlightbackground="#0c9ee2")
+        self.Label1.configure(highlightbackground="#ff9980")
         self.Label1.configure(highlightcolor="black")
         self.Label1.configure(text='''Upload *.json file:''')
         
 
         self.Compile_button = Button(top)
         self.Compile_button.place(relx=0.35, rely=0.65, height=40, width=80)
-        self.Compile_button.configure(activebackground="#0a83bb") #0c9ee2
+        self.Compile_button.configure(activebackground="#ff8566") #ff9980
         self.Compile_button.configure(activeforeground="#000000")
-        self.Compile_button.configure(background="#0a83bb")
+        self.Compile_button.configure(background="#ff8566")
         self.Compile_button.configure(disabledforeground="#a3a3a3")
         self.Compile_button.configure(foreground="#000000")
-        self.Compile_button.configure(highlightbackground="#0a83bb")
+        self.Compile_button.configure(highlightbackground="#ff8566")
         self.Compile_button.configure(highlightcolor="black")
         self.Compile_button.configure(pady="0")
         self.Compile_button.configure(text='''Run''')
