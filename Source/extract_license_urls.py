@@ -35,7 +35,7 @@ class SeleniumDriver:
         try:
             self.browser.get(url)
         except Exception as e:
-            print(e)
+            print(str(e))
         driver_sub_element = self.browser.find_elements_by_css_selector('div.g')
 
         for res in range(0, 2):

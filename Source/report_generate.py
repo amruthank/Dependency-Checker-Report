@@ -3,6 +3,8 @@ from openpyxl.styles.borders import Border, Side
 from openpyxl.styles import PatternFill
 from matplotlib import style, pyplot as plt
 
+import numpy as np 
+
 
 thin_border = Border(left=Side(style='thin'), 
                      right=Side(style='thin'), 
@@ -38,19 +40,38 @@ def _reverse_dict_values(data):
         slices[i] = len(items[1])
         labels[i] = items[0]
 
-    #print(slices)    
-    #print(json.dumps(new_res, indent = 4))
     return (labels, slices, explode, new_res)
 
 
 
 
 def _draw_chart(labels, slices, explode, new_res):
-    patches, texts = plt.pie(slices, labels = ["\n".join(str(key) for key in val) for val in new_res.values()], explode = explode, startangle = 90, \
-                             shadow = True, autopct = None, labeldistance = 0.5)
-    plt.title("Licenses of Dependency Components")
-    plt.legend(patches, labels, loc="best")
-    plt.tight_layout()
+
+    fig, ax= plt.subplots(figsize=(4,4))
+    plt.subplots_adjust(bottom=0.3)
+
+    #plt.title("Licenses of Dependency Components")
+    plt.gca().axis("equal")
+
+    patches, texts = pie = plt.pie(slices, startangle=5)
+
+
+    bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+    arrowprops=dict(arrowstyle="-",connectionstyle="angle,angleA=0,angleB=90")
+    kw = dict(xycoords='data',textcoords='data',arrowprops=dict(arrowstyle="-"), 
+              bbox=bbox_props, zorder=0, va="center")
+
+    for i, p in enumerate(patches):
+        ang = (p.theta2 - p.theta1)/2. + p.theta1
+        y = np.sin(np.deg2rad(ang))
+        x = np.cos(np.deg2rad(ang))
+        horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+        connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+        kw["arrowprops"].update({"connectionstyle": connectionstyle})
+        ax.annotate("\n".join(list(new_res.values())[i]), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
+                     horizontalalignment=horizontalalignment, **kw)
+        
+    plt.legend(pie[0],labels, loc="center", bbox_to_anchor=(0.5,-0.2))
     plt.show()
 
 
@@ -98,3 +119,21 @@ def generateFinalReport(res_dict, result_type):
             wb.save('result.xlsx')
         return True
     
+
+if __name__ == "__main__":
+
+    data = {
+        "FOXopen": [
+            "GPL License"
+        ],
+        "semver": [
+            "MIT License"
+        ],
+        "logging-log4net": [
+            "Apache License"
+        ],
+        "registry-url": [
+            "Unlicensed"
+        ]
+    }
+    generateFinalReport(data, "graph") 
