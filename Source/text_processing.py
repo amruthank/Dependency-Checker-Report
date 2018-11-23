@@ -32,7 +32,6 @@ list_of_oss_license = {
                         "EFL": ["Eiffel Forum License V2.0", "EFL-2.0"],
                         "Entessa": ["Entessa Public License", "Entessa"],
                         "EUPL": ["European Union Public License Version 1.1", "EUPL-1.1"],
-                        "EUPL": ["European Union Public License Version 1.1", "EUPL-1.1"], 
                         "Fair": ["Fair License", "Fair"],
                         "Frameworx": ["Frameworx License", "Frameworx-1.0"],
                         "Public": ["Free Public License"],
@@ -84,6 +83,9 @@ list_of_oss_license = {
                         "0BSD": ["Zero Clause BSD License"],
                         "ZPL": ["Zope Public License 2.0", "ZPL-2.0"]
                         }
+
+permissive_licenses = ['0BSD', 'APL', 'Apache', 'BSD', 'BSL', 'CDDL', 'CPAL', 'EPL', 'ISC', 'MIT', 'MPL', 'MS-PL', 'MS-RL', 'PHP', 'Public', 'Python', 'ZPL', 'Zlib']
+
 
 
 def _cleanText(text):
@@ -157,6 +159,8 @@ def getLicenseNames(url_list):
     
     license_names = []
     is_public_license = False
+
+    is_permissive = False
     
     for url in url_list:
 
@@ -178,7 +182,16 @@ def getLicenseNames(url_list):
                 if results != None and results not in license_names:
                     if results == "Public License":
                         is_public_license = True
-                    license_names.append(results)
+
+                    if results in permissive_licenses:
+
+                        if is_permissive == False:
+                            license_names.append(results)
+                            is_permissive = True
+                        else:
+                            continue
+                    else:
+                        license_names.append(results)
 
     if is_public_license and any(re.search("GPL|LGPL", val, re.IGNORECASE) != None for val in license_names):
         
@@ -198,8 +211,8 @@ def getLicenseNames(url_list):
                 del license_names[index]
 
     if len(license_names) == 0:
-        return ["Unlicensed"]
-    print(license_names)
+        return ["Unlicensed"] 
+    
     return license_names
 
 

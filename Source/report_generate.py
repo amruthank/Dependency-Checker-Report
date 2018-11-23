@@ -53,7 +53,7 @@ def _draw_chart(labels, slices, explode, new_res):
     #plt.title("Licenses of Dependency Components")
     plt.gca().axis("equal")
 
-    patches, texts = pie = plt.pie(slices, startangle=5)
+    patches, texts = pie = plt.pie(slices, startangle=90)
 
 
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)

@@ -73,7 +73,9 @@ class File:
 
         for id, key in enumerate(self.dependency_dic):
             result_dictionary["%s"%key] = pool_res[id]
-           
+
+        print("=========== %s"%result_dictionary)
+        
         self.generate_report(result_dictionary)
 
     #Finalize the license names for the component.
