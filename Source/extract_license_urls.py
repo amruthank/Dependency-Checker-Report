@@ -39,13 +39,14 @@ class SeleniumDriver:
         driver_sub_element = self.browser.find_elements_by_css_selector('div.g')
 
         for res in range(0, 2):
+            
             try:
                 link = driver_sub_element[res].find_element_by_tag_name("a")
             except Exception:
                 continue
             else:
                 result_dict["%s"%oss_component].append(link.get_attribute("href"))
-
+        
         return result_dict
     
             

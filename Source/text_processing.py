@@ -179,20 +179,23 @@ def getLicenseNames(url_list):
                 if len(l) > 0 or result.find(key) != -1:
                     results = key+" "+"License"
 
+                    #Avoid permissive license lists!
+                    if key in permissive_licenses:
+                        
+                        if is_permissive == False and results not in license_names:
+                            license_names.append(results)
+                            is_permissive = True
+                            continue
+                        elif is_permissive == True:
+                            continue
+
                 if results != None and results not in license_names:
                     if results == "Public License":
                         is_public_license = True
+                   
+                    license_names.append(results)
 
-                    if results in permissive_licenses:
-
-                        if is_permissive == False:
-                            license_names.append(results)
-                            is_permissive = True
-                        else:
-                            continue
-                    else:
-                        license_names.append(results)
-
+    #TODO: Handle AGPL
     if is_public_license and any(re.search("GPL|LGPL", val, re.IGNORECASE) != None for val in license_names):
         
         try:
@@ -211,9 +214,20 @@ def getLicenseNames(url_list):
                 del license_names[index]
 
     if len(license_names) == 0:
-        return ["Unlicensed"] 
+        return ["Unlicensed"]
     
-    return license_names
+    elif len(license_names)>3: #Avoid extra licenses!
+
+        if "GPL License" in license_names:
+            return ["GPL License"]
+        elif "LGPL License" in license_names:
+            return ["LGPL License"]
+        elif "AGPL License" in license_names:
+            return ["AGPL License"]
+        else:
+            return list(license_names[0:3])
+    else:
+        return license_names
 
 
 #TODO: Extract license which are not given in the above dictionary.

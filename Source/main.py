@@ -88,26 +88,11 @@ class File:
         
 def file_parser(file_name):
     file1 = File(file_name)
-    
-#if __name__ == "__main__":
-#    file_parser()
-
-
-
-
-
 
 ##################################################################FRONT END##################################################################################
-
-'''try:
-    from Tkinter import *
-except ImportError:
-'''
-
 from tkinter import *
     
 from tkinter import messagebox
-
 
 try:
     import ttk
